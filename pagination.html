@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <style>
+            .pagination {
+                display: inline-block;
+                clear: both;
+            }
+
+            .pagination a {
+                color: black;
+                float: left;
+                padding: 8px 16px;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .pagination a.cur_page {
+                cursor: default;
+            }
+
+            .pagination a.active {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            .pagination a:hover:not(.active) {
+                background-color: #ddd;
+            }
+        </style>
+
+        <div class="pagination"></div>
+
+        <script>
+            var urlParam = function(name){
+                var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+                if (results==null){
+                   return null;
+                }
+                else{
+                   return results[1] || 0;
+                }
+            }
+
+            String.sprintf = function() {
+                var theString = arguments[0];
+                for (var i = 1; i < arguments.length; i++) {
+                    var regEx = new RegExp("\\{" + (i - 1) + "\\}", "gm");
+                    theString = theString.replace(regEx, arguments[i]);
+                }
+                return theString;
+            }
+
+            function generate_paging(rowcount, page) {
+                var rows = 10;
+                var total = Math.ceil( rowcount / rows );
+                var start = Math.floor( ( page - 1 ) / rows ) * rows + 1;
+
+                var end = start + ( rows - 1 );
+                end = end > total ? total : end;
+
+                var next = start + rows;
+                next = next > total ? total : next;
+
+                var prev = start - rows;
+                prev = prev < 1 ? 1 : prev;
+
+                var paginationNode = document.getElementsByClassName('pagination')[0];
+                var aTag;
+                if (page != 1) {
+                    aTag = document.createElement('a');
+                    aTag.href = String.sprintf('?_p={0}', prev);
+                    aTag.innerHTML = "&laquo;";
+                    paginationNode.appendChild(aTag);
+                }
+                for(var i = start; i <= end; i++) {
+                    aTag = document.createElement('a');
+                    aTag.href = String.sprintf('?_p={0}', i);
+                    aTag.innerHTML = i;
+                    if ( i == page ) {
+                        aTag.className = "cur_page";
+                    }
+                    paginationNode.appendChild(aTag);
+                }
+                if (page != total) {
+                    aTag = document.createElement('a');
+                    aTag.href = String.sprintf('?_p={0}', next);
+                    aTag.innerHTML = "&raquo;";
+                    paginationNode.appendChild(aTag);
+                }
+            }
+
+            var page = urlParam('_p');
+            page = page ? page : 1;
+
+            generate_paging(170, page);
+        </script>
+    </body>
+</html>
