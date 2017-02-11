@@ -85,7 +85,7 @@
                     }
                     paginationNode.appendChild(aTag);
                 }
-                if (page != total) {
+                if (next != total) {
                     aTag = document.createElement('a');
                     aTag.href = String.sprintf('?_p={0}', next);
                     aTag.innerHTML = "&raquo;";
@@ -96,7 +96,7 @@
             var page = urlParam('_p');
             page = page ? page : 1;
 
-            generate_paging(170, page);
+            generate_paging(200, page);
         </script>
     </body>
 </html>
